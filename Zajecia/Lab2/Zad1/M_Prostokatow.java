@@ -1,31 +1,30 @@
-
 import java.util.function.Function;
 
-class M_Prostokatow implements CalkowanieNumeryczne
-{
-    public static double oblicz(double poczatek, double koniec, int n, Function<Double, Double> f)
-    {
-        double dx = (koniec - poczatek) / n;
-        FunkcjaWatek[] tab = new FunkcjaWatek[n];
-        for (int i=0; i<n; i++)
-        {
-            tab[i] = new FunkcjaWatek(dx*(i+1), f);
-            tab[i].start();
-        }
-        double wynik = 0;
-        for (int i=0; i<n; i++)
-        {
-            try
-            {
-                tab[i].join();
-            }
-            catch(InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            wynik = wynik + tab[i].getWynik();
-        }
-        wynik = wynik * dx;
+class M_Prostokatow extends Thread {
+    private double wynik;
+    private double poczatek;
+    private double koniec;
+    private double liczbaPodzialow;
+    private int i;
+    private Function<Double, Double> f;
+
+    public M_Prostokatow(double poczatek, double koniec, double liczbaPodzialow, int i, Function<Double, Double> f) {
+        this.poczatek = poczatek;
+        this.koniec = koniec;
+        this.liczbaPodzialow = liczbaPodzialow;
+        this.i = i;
+        this.f = f;
+    }
+
+    @Override
+    public void run() {
+        double dx = (koniec - poczatek) / liczbaPodzialow;
+        double xi = dx * (i + 1);
+        double y = f.apply(xi);
+        wynik = y * dx;
+    }
+
+    public double getWynik() {
         return wynik;
     }
 }

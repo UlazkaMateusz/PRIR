@@ -1,59 +1,64 @@
-
 import java.util.function.Function;
 
-class M_Simpsona implements CalkowanieNumeryczne
-{
-    public static double oblicz(double poczatek, double koniec, int n, Function<Double, Double> f) {
-        double dx = (koniec - poczatek) / n;
+class M_Simpsona extends Thread {
+    private double wynik;
+    private double poczatek;
+    private double koniec;
+    private double liczbaPodzialow;
+    private int i;
+    private Rodzaj rodzaj;
+    private Function<Double, Double> f;
 
-        FunkcjaWatek f0 = new FunkcjaWatek(poczatek, f);
-        FunkcjaWatek fn = new FunkcjaWatek(koniec, f);
+    public enum Rodzaj {
+        Zwykly, Xi, Ti
+    }
 
-        f0.start();
-        fn.start();
+    public M_Simpsona(double poczatek, double koniec, double liczbaPodzialow, int i, Rodzaj rodzaj,
+            Function<Double, Double> f) {
+        this.poczatek = poczatek;
+        this.koniec = koniec;
+        this.liczbaPodzialow = liczbaPodzialow;
+        this.i = i;
+        this.rodzaj = rodzaj;
+        this.f = f;
+    }
 
-        FunkcjaWatek[] fi = new FunkcjaWatek[n-1];
-        for(int i=1; i<=n-1; i++)
-        {
-            double xi = poczatek + i*dx;
-            fi[i-1] = new FunkcjaWatek(xi, f);
-            fi[i-1].start();
+    @Override
+    public void run() {
+        switch (rodzaj) {
+            case Zwykly:
+                policzZwykly();
+                break;
+            case Xi:
+                policzXi();
+                break;
+            case Ti:
+                policzTi();
+                break;
         }
+    }
 
-        FunkcjaWatek[] fti = new FunkcjaWatek[n];
-        for(int i=1; i<=n; i++)
-        {
-            double ti = (poczatek + (i-1)*dx + poczatek + (i+1)*dx) / 2;
-            fti[i-1] = new FunkcjaWatek(ti, f);
-            fti[i-1].start();
-        }
+    private void policzZwykly() {
+        double dx = (koniec - poczatek) / liczbaPodzialow;
+        if (i == 0)
+            wynik = f.apply(poczatek) * dx / 6;
+        else if (i == 1)
+            wynik = f.apply(koniec) * dx / 6;
+    }
 
+    private void policzXi() {
+        double dx = (koniec - poczatek) / liczbaPodzialow;
+        double xi = poczatek + i * dx;
+        wynik = f.apply(xi) * dx / 6 * 2;
+    }
 
-        double wynik = 0;
-        try 
-        {
-            f0.join();
-            wynik += f0.getWynik();
-            fn.join();
-            wynik += fn.getWynik();
-        
+    private void policzTi() {
+        double dx = (koniec - poczatek) / liczbaPodzialow;
+        double ti = (poczatek + (i - 1) * dx + poczatek + (i + 1) * dx) / 2;
+        wynik = f.apply(ti) * dx / 6 * 4;
+    }
 
-            for(int i=0; i<fi.length; i++)
-            {
-                wynik += 2 * fi[i].getWynik();
-            }
-
-            for(int i=0; i<fti.length; i++)
-            {
-                wynik += 4 * fti[i].getWynik();
-            }
-
-        } catch (InterruptedException e) 
-        {
-            e.printStackTrace();
-        }
-
-        wynik *= dx/6;
+    public double getWynik() {
         return wynik;
     }
 }
