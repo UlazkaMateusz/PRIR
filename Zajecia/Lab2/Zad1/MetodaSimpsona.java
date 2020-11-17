@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.function.Function;
 
-class MetodaSimpsona{
+class MetodaSimpsona implements CalkowanieNumeryczne {
     public static double oblicz(double poczatek, double koniec, int liczbaPodzialow, Function<Double, Double> f) {
         ArrayList<M_Simpsona> watki = new ArrayList<M_Simpsona>();
 

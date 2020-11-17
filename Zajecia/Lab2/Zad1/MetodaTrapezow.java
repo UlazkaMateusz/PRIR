@@ -1,6 +1,6 @@
 import java.util.function.Function;
 
-class MetodaTrapezow{
+class MetodaTrapezow implements CalkowanieNumeryczne {
     public static double oblicz(double poczatek, double koniec, int liczbaPodzialow, Function<Double, Double> f) {
         M_Trapezow[] watki = new M_Trapezow[liczbaPodzialow + 1];
         for (int i = 0; i < watki.length; i++) {

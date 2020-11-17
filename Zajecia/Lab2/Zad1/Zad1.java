@@ -4,8 +4,8 @@ public class Zad1 {
     public static void main(String[] args)
     {
         double poczatek = 0;
-        double koniec = 20*Math.PI;
-        int n = 1000;
+        double koniec = 1000*Math.PI;
+        int n = 100;
         Function<Double, Double> f = (Double x) -> {return Math.pow(x, 2) * Math.sin(-5*x) + 2;};
 
         double wynik = MetodaProstokatow.oblicz(poczatek, koniec, n, f);
