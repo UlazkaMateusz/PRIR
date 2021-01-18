@@ -1,0 +1,10 @@
+Dzięki środowisku tensorflow, wszystkie zadania były łatwe w realizacji, mimo że rozwiazują złożone problemy.
+
+Zad 1.
+Proste funckje, które już pisliśmy na zajęciach zostały napisane w pythonie. Środowisko tensoflow, dało mi niezbędne narzędzia, aby wszybko w prosty sposób zmienić jednostę obliczeniową.
+
+Zad 2.
+Dzięki środowisku keras oraz załączonym tutorialom  udało mi się stworzyć prostą sieć neuronową, która potrafi przewidywać funckję liniową
+
+Zad 3.
+Środowisko keras pozwoliło na stworzenie zaawansowanej sieci neuronowej, która potrafi rozpoznać częsć ubioru oraz wypisać jej nazwę.
