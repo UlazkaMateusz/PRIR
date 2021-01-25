@@ -1,0 +1,5 @@
+1) WildEye - projekt zajmujący się ochrną dzikich zwierząt. Głównym celem jest walka z handlem dzikimi zwierzętami oraz polowaniem na zwierzęta. Wykorzystują Tensorflow oraz IOT, aby zbierać dane i wysyłać alarm w momencie wykrycia zagrożenia. Dzięki Tensorflow mogą analizować obraz z wielu kamer jednocześnie. 
+
+2) SIGHT - Okulary dla niewidomych pomagające im poznawać świat wokół nich. Posiadają kamerę oraz przycisk robiący zdjęcie. Takie zdjęcie jest następnie analizowane i jego opis jest generowany i odtwarzany za pomocą głośniczków. 
+
+3) Farmaid - Robot autonomicznie jeżdżący wśród roślin w szklarni w celu znajdywania i identyfikacji chorób roślinnych. Dzięki Tensorflow oraz kamerom może analizować obraz, aby zidentyfikować chorobę oraz może przemieszczać się nie uszkadzając niczego.  
