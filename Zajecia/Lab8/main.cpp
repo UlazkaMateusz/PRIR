@@ -5,7 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <unistd.h>
- 
+
 #include <mpi.h>
 
 const int ilosc_wierszy = 100;
@@ -47,24 +47,44 @@ void generuj(int ilosc_robotnikow, const int ilosc_kolumn)
     std::ofstream plik ("julia.ppm", std::ofstream::out);
     // Pierwsza linia
     plik << "P3 " << ilosc_kolumn << " " << ilosc_kolumn << " 255\n";
-    for(auto& wiersz : wartosci)
+    for (int i=0; i < wartosci.size(); i++)
     {
-        for (auto& kolumna : wiersz)
+        for (int j=0; j<wartosci.size(); j++)
         {
-            int k = kolumna; 
+            int k = wartosci[j][i];
             if(k < odciencie)
             {
                 k = k;
             }
-            else 
+            else
             {
                 k = 0;
             }
 
             plik << "0 " << k << " 0 \t";
         }
+
         plik << "\n";
     }
+
+    // for(auto& wiersz : wartosci)
+    // {
+    //     for (auto& kolumna : wiersz)
+    //     {
+    //         int k = kolumna;
+    //         if(k < odciencie)
+    //         {
+    //             k = k;
+    //         }
+    //         else
+    //         {
+    //             k = 0;
+    //         }
+    //
+    //         plik << "0 " << k << " 0 \t";
+    //     }
+    //     plik << "\n";
+    // }
 
     plik.close();
     std::cout << "Obrazek wygenerowany i gotowy do obejrzenia." << std::endl;
@@ -79,7 +99,7 @@ void oblicz(int nr_robotnika, int ilosc_robotnikow, const int ilosc_kolumn)
     double ratioX = (1.25 - -1.25) / ilosc_kolumn;
 
     int poczatek_wierszy = nr_robotnika * ilosc_wierszy;
-    int koniec_wierszy = (nr_robotnika + 1) * ilosc_wierszy; 
+    int koniec_wierszy = (nr_robotnika + 1) * ilosc_wierszy;
 
     std::vector<std::vector<int>> wartosci;
     wartosci.resize(ilosc_wierszy);
@@ -92,10 +112,12 @@ void oblicz(int nr_robotnika, int ilosc_robotnikow, const int ilosc_kolumn)
     {
         for (int j = 0; j < ilosc_kolumn; j++)
         {
-            double rzeczywista = i * ratioY + -1.25;
-            double urojona = j * ratioX + -1.25;
+            // double rzeczywista = i * ratioY + -1.25;
+            // double urojona = j * ratioX + -1.25;
+            double rzeczywista = (4.0 * i - 2 * ilosc_kolumn) / ilosc_kolumn;
+            double urojona = (4.0 * j - 2 * ilosc_kolumn) / ilosc_kolumn;
 
-            std::complex<double> c = std::complex<double>(-0.123, 0.735);
+            std::complex<double> c = std::complex<double>(rzeczywista, urojona);
             std::complex<double> z = std::complex<double>(rzeczywista, urojona);
 
             int k = 0;
@@ -109,7 +131,7 @@ void oblicz(int nr_robotnika, int ilosc_robotnikow, const int ilosc_kolumn)
         }
     }
 
-    // Wyslij 
+    // Wyslij
     std::cout << "Wysylam wiadomosci robotnik nr: " << nr_robotnika << std::endl;
     for (int i=0; i<ilosc_wierszy; i++)
     {
