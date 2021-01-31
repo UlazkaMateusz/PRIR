@@ -1,0 +1,52 @@
+Problem: Wielowątkowy silnik CSS
+
+Silnik CSS jest jednym z najważniejszych elementów współczesnych przeglądarek. Odpowiada on za obraz, który widzimy w oknie przeglądarki.
+Każda przeglądarka ma własny silnik CSS: 
+ - Chrome -> Blink
+ - Edge -> EdgeHTML
+ - Safari -> Webkit
+ - Firefox -> Gecko
+
+Wraz z powstawaniem nowych narzędzi typu Google Colaboratory i przenoszeniem typowych programów komputerowych typu np. excel do sieci zwiększa się zapotrzebowanie an szybko działające przeglądarki oraz wykorzystywanie wszystkich zasobów komputera.
+
+Silniki CSS muszą być przede wszystkim szybkie, dlatego większość z nich jest napisana w języku C++. 
+Jako, że C++ jest językiem skomplikowanym oraz relatywnie niskiego poziomu, to bezpieczne programowanie wielowątkowe jest w nim bardzo trudne, przez co wiele implementacji silników CSS nie jest pisana wielowątkowo, co przekłada się na ich wolniejsze działanie.
+
+Uproszczony model działania silnika CSS:
+1. Parsowanie plików, w celu odtworzenia struktury plików oraz ich zależności
+2. Obliczenie stylów oraz właściwości każdego elementu
+3. Ułożenie elementów na stronie
+4. Rysowanie elementów na wielu warstwach
+5. Użycie transformacji na warstwach a następnie renederowanie obrazu
+
+Przykładowe problemy pojawiające się podczas programowania wielowątkowego:
+1. Generowanie różnych elementów.
+    Elementy generowanego przez dokumenty przeważnie będą miały różny poziom skomplikowania, przez jeden wątek może pracować dłużej niż inne, spowalniając działanie całego silnika.
+
+    Rozwiązanie: Wątki rozdzielają swoje zadanie na 1 lub więcej "jednostek pracujących", następnie ustawia je w kolejce i wykonuje po kolei. Gdy jakiś z wątków skończy wszystkie swoje zadania, sprawdza kolejki innych wątków i "kradnie" zadanie do wykonania.  
+
+2. "Race condition" oraz "Data race"
+    "Race condition" - Jednoczesny dostęp kilku wątków do tego samego zasobu. Może być całkowicie bezpieczne, np. gdy wątki jedynie odczytują dane.
+    "Data race" - Szczególny rodzaj "Race condition", gdy dwa lub więcej wątków uzyskuje jednoczesny dostęp do tego samego zasobu, co najmniej jeden z tych wątków zapisuje dane oraz co najmniej jeden z nich nie jest zsynchronizowany.
+
+    Rozwiązanie: 
+    "Data race" - Możemy uniknąć upewniając się, że synchronizujemy dostęp do danych np. poprzez Mutex. Możemy także wykorzystywać język programowania, w którym program z występującym "Data race" jest nie możliwy do skompilowania np. Rust.
+    "Race condition" - Niestety nie da się tego uniknąć w programowaniu wielowątkowym. 
+ 
+Przykładem przeglądarki, która stara się wykorzystać programowanie wielowątkowe jest Servo. Przeglądarka powstaje od 2012 roku i wciąż nie jest gotowa. 
+Możliwe jest pobranie przeglądarki oraz przeglądanie dzięki niej stron internetowych, lecz widać, że nie jest ona gotowa do użytku, przez normalnego użytkownika.
+Jednak możliwe jest znalezienie porównań przeglądarki Servo wraz z innymi w teście renderowania CSS.
+Przykładowe wyniki:
+ - Chrome - 15fps
+ - Firefox - 9fps
+ - Safari - 5fps
+ - Servo - 60fps
+
+Zastosowanie programowania wielowątkowego pozwala na nawet 4 krotne przyśpieszenia działa nia przeglądarki, co w przyszłości może umożliwić przeniesienie wszystkich typowych desktopowych narzędzi do przeglądarki. 
+
+
+Źródło: https://hacks.mozilla.org/2017/08/inside-a-super-fast-css-engine-quantum-css-aka-stylo/
+Porównanie: https://www.youtube.com/watch?v=u0hYIRQRiws&feature=emb_title
+Test użyty w porównaniu: http://output.jsbin.com/surane/quiet
+Kod źródłowy przeglądarki Servo: https://github.com/servo/servo
+Projekt Servo: https://servo.org/
